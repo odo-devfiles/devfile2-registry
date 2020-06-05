@@ -9,6 +9,7 @@
     ],
     "projectType": "maven",
     "language": "java",
+    "supported": true,
     "links": {
       "self": "/devfiles/maven/devfile.yaml"
     }
@@ -24,6 +25,7 @@
     ],
     "projectType": "nodejs",
     "language": "nodejs",
+    "supported": true,
     "links": {
       "self": "/devfiles/nodejs/devfile.yaml"
     }
@@ -34,6 +36,7 @@
     "description": "Open Liberty microservice in Java",
     "projectType": "docker",
     "language": "java",
+    "supported": true,
     "links": {
       "self": "/devfiles/openLiberty/devfile.yaml"
     }
@@ -48,6 +51,7 @@
     ],
     "projectType": "quarkus",
     "language": "java",
+    "supported": true,
     "links": {
       "self": "/devfiles/quarkus/devfile.yaml"
     }
@@ -64,6 +68,7 @@
     "icon": "https://www.eclipse.org/che/images/logo-eclipseche.svg",
     "projectType": "spring",
     "language": "java",
+    "supported": true,
     "links": {
       "self": "/devfiles/springBoot/devfile.yaml"
     }

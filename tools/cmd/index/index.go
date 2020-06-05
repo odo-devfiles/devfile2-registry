@@ -8,8 +8,13 @@ import (
 	"log"
 	"path/filepath"
 
-	"github.com/elsony/devfile-registry/tools/types"
-	"gopkg.in/yaml.v2"
+	"github.com/odo-devfiles/registry/tools/types"
+	"github.com/odo-devfiles/registry/tools/utils"
+)
+
+const (
+	metafileName = "meta.yaml"
+	devfileName  = "devfile.yaml"
 )
 
 // genIndex generate new index from meta.yaml files in dir.
@@ -25,20 +30,24 @@ func genIndex(dir string) ([]types.MetaIndex, error) {
 
 	for _, file := range dirs {
 		if file.IsDir() {
-			var meta types.Meta
-			metaFile, err := ioutil.ReadFile(filepath.Join(dir, file.Name(), "meta.yaml"))
-			if err != nil {
-				return nil, err
-			}
-			err = yaml.Unmarshal(metaFile, &meta)
+			// Read the meta.yaml
+			meta, err := utils.GetMeta(filepath.Join(dir, file.Name(), metafileName))
 			if err != nil {
 				return nil, err
 			}
 
-			self := fmt.Sprintf("/%s/%s/%s", filepath.Base(dir), file.Name(), "devfile.yaml")
+			// Read the devfile.yaml
+			devfile, err := utils.GetDevfile(filepath.Join(dir, file.Name(), devfileName))
+			if err != nil {
+				return nil, err
+			}
 
+			isSupported := utils.IsDevfileSupported(devfile)
+
+			self := fmt.Sprintf("/%s/%s/%s", filepath.Base(dir), file.Name(), devfileName)
 			metaIndex := types.MetaIndex{
-				Meta: meta,
+				Meta:      meta,
+				Supported: isSupported,
 				Links: types.Links{
 					Self: self,
 				},
@@ -51,7 +60,7 @@ func genIndex(dir string) ([]types.MetaIndex, error) {
 
 func main() {
 	devfiles := flag.String("devfiles-dir", "", "Directory containing devfiles.")
-	output := flag.String("index", "", "Index filaname. This is where the index in JSON format will be saved.")
+	output := flag.String("index", "", "Index filename. This is where the index in JSON format will be saved.")
 
 	flag.Parse()
 
