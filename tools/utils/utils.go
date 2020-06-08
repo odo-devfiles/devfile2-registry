@@ -3,8 +3,8 @@ package utils
 import (
 	"io/ioutil"
 
-	"github.com/ghodss/yaml"
 	"github.com/odo-devfiles/registry/tools/types"
+	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -14,36 +14,24 @@ const (
 // IsDevfileSupported checks if devfile v2 is supported
 func IsDevfileSupported(devfile types.Devfile) bool {
 
-	hasComponentContainer := false
-	hasComponentContainerName := false
+	hasSupportedContainer := false
 	hasRunGroupCommand := false
 
 	for _, component := range devfile.Components {
-		if hasComponentContainer && hasComponentContainerName {
+		if component.Container != nil && component.Container.Name != "" {
+			hasSupportedContainer = true
 			break
-		}
-
-		if !hasComponentContainer {
-			hasComponentContainer = component.Container != nil
-		}
-
-		if hasComponentContainer && !hasComponentContainerName {
-			hasComponentContainerName = len(component.Container.Name) > 0
 		}
 	}
 
 	for _, command := range devfile.Commands {
-
-		if !hasRunGroupCommand {
-			hasRunGroupCommand = command.Exec != nil && command.Exec.Group != nil && command.Exec.Group.Kind == runGroup
+		if command.Exec != nil && command.Exec.Group != nil && command.Exec.Group.Kind == runGroup {
+			hasRunGroupCommand = true
+			break
 		}
 	}
 
-	if hasComponentContainer && hasComponentContainerName && hasRunGroupCommand {
-		return true
-	}
-
-	return false
+	return hasSupportedContainer && hasRunGroupCommand
 }
 
 // GetDevfile reads the devfile from the path and returns the devfile struct
