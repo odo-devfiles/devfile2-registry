@@ -11,11 +11,9 @@ const (
 	runGroup = "run"
 )
 
-// IsDevfileSupported checks if devfile v2 is supported
-func IsDevfileSupported(devfile types.Devfile) bool {
-
+// isContainerPresent checks if the devfile has a supported container component
+func isContainerPresent(devfile types.Devfile) bool {
 	hasSupportedContainer := false
-	hasRunGroupCommand := false
 
 	for _, component := range devfile.Components {
 		if component.Container != nil && component.Container.Name != "" {
@@ -24,12 +22,28 @@ func IsDevfileSupported(devfile types.Devfile) bool {
 		}
 	}
 
+	return hasSupportedContainer
+}
+
+// isRunGroupPresent checks if the devfile has a run group command
+func isRunGroupCommandPresent(devfile types.Devfile) bool {
+	hasRunGroupCommand := false
+
 	for _, command := range devfile.Commands {
 		if command.Exec != nil && command.Exec.Group != nil && command.Exec.Group.Kind == runGroup {
 			hasRunGroupCommand = true
 			break
 		}
 	}
+
+	return hasRunGroupCommand
+}
+
+// IsDevfileSupported checks if devfile v2 is supported
+func IsDevfileSupported(devfile types.Devfile) bool {
+
+	hasSupportedContainer := isContainerPresent(devfile)
+	hasRunGroupCommand := isRunGroupCommandPresent(devfile)
 
 	return hasSupportedContainer && hasRunGroupCommand
 }
