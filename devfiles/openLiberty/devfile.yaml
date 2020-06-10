@@ -4,53 +4,40 @@ metadata:
   version: 1.0.0
   description: Java application stack using Open Liberty runtime
 projects:
-  - name: openliberty
+  - name: user-app
     git:
-      location: https://github.com/odo-devfiles/openliberty-ex.git
+      location: 'https://github.com/odo-devfiles/openliberty-ex.git'
+      branch: master
 components:
   - chePlugin:
       id: redhat/java/latest
       memoryLimit: 1512Mi
   - container:
-      name: devruntime
-      image: jeevandroid/open-liberty-dev:latest
-      memoryLimit: 768Mi
+      name: appsodyrun
+      image: 'ajymau/java-openliberty-dev:latest'
+      memoryLimit: 1512Mi
       mountSources: true
-      volumeMounts:
-      - name: m2
-        path: /home/user/.m2
       endpoints:
-      - name: 9080/http
-        configuration:
-          discoverable: false
-          public: true
-          protocol: tcp
-          scheme: http
-        targetPort: 9080
-      - name: 9443/https
-        configuration:
-          discoverable: false
-          public: true
-          protocol: tcp
-          secure: true
-          scheme: http
-        targetPort: 9443
+        - name: 9080/tcp
+          configuration:
+            discoverable: false
+            public: true
+            protocol: tcp
+            scheme: http
+          targetPort: 9080
+      env:
+        - name: MODE2
+          value: TEST2
+        - name: myprop2
+          value: myval2
 commands:
   - exec:
-      id: devBuild
-      component: devruntime
-      commandLine: /artifacts/bin/build.sh
-      workingDir: /projects/openliberty
-      group:
-          kind: build
-          isDefault: true
-  - exec:
       id: devRun
-      component: devruntime
-      commandLine: /artifacts/bin/run.sh
-      workingDir: /projects/openliberty
+      component: appsodyrun
+      commandLine: mvn -DhotTests=true -DappsDirectory=apps -Dmaven.repo.local=/mvn/repository liberty:dev
+      workingDir: /projects/user-app
       attributes:
         restart: "false"
       group:
-          kind: run
-          isDefault: true
+        kind: run
+        isDefault: true
