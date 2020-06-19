@@ -5,7 +5,7 @@ metadata:
   dockerfile: "https://raw.githubusercontent.com/odo-devfiles/registry/master/devfiles/nodejs/Dockerfile"
   deployment-manifest: "https://raw.githubusercontent.com/odo-devfiles/registry/master/devfiles/nodejs/deploy.yaml"
 projects:
-  - name: nodejs-basic-starter
+  - name: nodejs-starter
     git:
       location: "https://github.com/odo-devfiles/nodejs-ex.git"
 components:
@@ -26,7 +26,7 @@ commands:
       id: download app dependencies
       component: runtime
       commandLine: npm install
-      workingDir: ${CHE_PROJECTS_ROOT}/nodejs-basic-starter
+      workingDir: ${CHE_PROJECTS_ROOT}/nodejs-starter
       group:
         kind: build
         isDefault: true
@@ -34,7 +34,7 @@ commands:
       id: run the app
       component: runtime
       commandLine: npm start
-      workingDir: ${CHE_PROJECTS_ROOT}/nodejs-basic-starter
+      workingDir: ${CHE_PROJECTS_ROOT}/nodejs-starter
       group:
         kind: run
         isDefault: true
