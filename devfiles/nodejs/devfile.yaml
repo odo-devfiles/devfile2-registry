@@ -2,35 +2,39 @@ schemaVersion: 2.0.0
 metadata:
   name: nodejs
   version: 1.0.0
+  dockerfile: "https://raw.githubusercontent.com/odo-devfiles/registry/master/devfiles/nodejs/Dockerfile"
+  deployment-manifest: "https://raw.githubusercontent.com/odo-devfiles/registry/master/devfiles/nodejs/deploy.yaml"
 projects:
-  - name: nodejs-web-app
+  - name: nodejs-basic-starter
     git:
       location: "https://github.com/odo-devfiles/nodejs-ex.git"
 components:
   - container:
       name: runtime
-      image: quay.io/eclipse/che-nodejs10-ubi:nightly
+      image: registry.access.redhat.com/ubi8/nodejs-12:1-36
       memoryLimit: 1024Mi
       mountSources: true
       endpoints:
-        - name: "http-3000"
-          configuration:
-            public: true
+        - name: http-3000
           targetPort: 3000
+          configuration:
+            protocol: tcp
+            scheme: http
+            type: terminal
 commands:
   - exec:
-      id: install
+      id: download app dependencies
       component: runtime
       commandLine: npm install
-      workingDir: ${CHE_PROJECTS_ROOT}/nodejs-web-app/app
+      workingDir: ${CHE_PROJECTS_ROOT}/nodejs-basic-starter
       group:
         kind: build
         isDefault: true
   - exec:
-      id: run
+      id: run the app
       component: runtime
-      commandLine: nodemon app.js
-      workingDir: ${CHE_PROJECTS_ROOT}/nodejs-web-app/app
+      commandLine: npm start
+      workingDir: ${CHE_PROJECTS_ROOT}/nodejs-basic-starter
       group:
         kind: run
         isDefault: true
