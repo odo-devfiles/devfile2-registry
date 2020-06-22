@@ -7,9 +7,6 @@ projects:
     git:
       location: "https://github.com/odo-devfiles/springboot-ex.git"
 components:
-  - plugin:
-    id: redhat/java/latest
-    memoryLimit: 1512Mi
   - container:
       name: tools
       image: maysunfaisal/springbootbuild
