@@ -9,9 +9,6 @@ projects:
       location: 'https://github.com/odo-devfiles/openliberty-ex.git'
       branch: master
 components:
-  - plugin:
-    id: redhat/java/latest
-    memoryLimit: 1512Mi
   - container:
       name: appsodyrun
       image: 'ajymau/java-openliberty-dev:latest'
