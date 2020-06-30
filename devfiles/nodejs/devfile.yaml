@@ -21,7 +21,7 @@ components:
             type: terminal
 commands:
   - exec:
-      id: download app dependencies
+      id: install
       component: runtime
       commandLine: npm install
       workingDir: ${CHE_PROJECTS_ROOT}/nodejs-starter
@@ -29,7 +29,7 @@ commands:
         kind: build
         isDefault: true
   - exec:
-      id: run the app
+      id: run
       component: runtime
       commandLine: npm start
       workingDir: ${CHE_PROJECTS_ROOT}/nodejs-starter
@@ -37,7 +37,7 @@ commands:
         kind: run
         isDefault: true
   - exec:
-      id: run the app (debugging enabled)
+      id: debug
       component: runtime
       commandLine: npm run debug
       workingDir: ${CHE_PROJECTS_ROOT}/nodejs-starter
@@ -45,7 +45,7 @@ commands:
         kind: debug
         isDefault: true
   - exec:
-      id: run the app's test suite
+      id: test
       component: runtime
       commandLine: npm test
       workingDir: ${CHE_PROJECTS_ROOT}/nodejs-starter
