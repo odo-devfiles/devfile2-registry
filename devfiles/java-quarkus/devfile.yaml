@@ -3,6 +3,11 @@ metadata:
   name: java-quarkus
   version: 1.0.0
   website: https://quarkus.io
+projects:
+  - name: quarkus-quickstart
+    git:
+      location: https://github.com/quarkusio/quarkus-quickstarts
+      sparseCheckoutDir: /getting-started/
 components:
   - container:
       name: tools
@@ -28,6 +33,7 @@ commands:
       group:
         kind: build
         isDefault: true
+      workingDir: $CHE_PROJECTS_ROOT/quarkus-quickstart
   - exec:
       id: dev-run
       component: tools
@@ -37,3 +43,4 @@ commands:
       group:
         kind: run
         isDefault: true
+      workingDir: $CHE_PROJECTS_ROOT/quarkus-quickstart
