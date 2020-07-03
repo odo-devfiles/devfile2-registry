@@ -4,10 +4,9 @@ metadata:
   version: 1.0.0
   website: https://quarkus.io
 projects:
-  - name: quarkus-quickstart
+  - name: quarkus-ex
     git:
-      location: https://github.com/quarkusio/quarkus-quickstarts
-      sparseCheckoutDir: /getting-started/
+      location: https://github.com/odo-devfiles/quarkus-ex
 components:
   - container:
       name: tools
@@ -33,7 +32,7 @@ commands:
       group:
         kind: build
         isDefault: true
-      workingDir: $CHE_PROJECTS_ROOT/quarkus-quickstart
+      workingDir: $CHE_PROJECTS_ROOT/quarkus-ex
   - exec:
       id: dev-run
       component: tools
@@ -43,4 +42,4 @@ commands:
       group:
         kind: run
         isDefault: true
-      workingDir: $CHE_PROJECTS_ROOT/quarkus-quickstart
+      workingDir: $CHE_PROJECTS_ROOT/quarkus-ex
