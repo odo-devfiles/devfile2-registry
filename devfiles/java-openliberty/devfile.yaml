@@ -17,7 +17,6 @@ components:
       endpoints:
         - name: 9080/tcp
           configuration:
-            discoverable: false
             public: true
             protocol: tcp
             scheme: http
