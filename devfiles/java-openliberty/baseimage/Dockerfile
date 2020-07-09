@@ -1,24 +1,52 @@
-FROM kabanero/ubi8-maven:0.3.1
-RUN  groupadd --gid 1000 java_group \
-  && useradd --uid 1000 --gid java_group --shell /bin/bash --create-home java_user \
-  && mkdir -p /mvn/repository \
-  && chown -R java_user:java_group /mvn \
-  && mkdir -p /opt/ol \
-  && chown -R java_user:java_group /opt \
-  && mkdir -p /stacks/java-openliberty/stackfiles/util \
-  && chown -R java_user:java_group /stacks/java-openliberty/stackfiles/util
+FROM adoptopenjdk/openjdk11-openj9:ubi AS maven
 
-RUN chmod -R 777 /stacks/java-openliberty/stackfiles
+RUN yum upgrade --disableplugin=subscription-manager -y \
+   && yum clean --disableplugin=subscription-manager packages \
+   && echo 'Finished installing dependencies'
+
+USER root
+
+# Dependency install
+RUN yum install --disableplugin=subscription-manager -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm \
+   && yum install --disableplugin=subscription-manager -y unzip curl ca-certificates wget xmlstarlet
+
+# Maven install
+ARG MAVEN_VERSION=3.6.3
+ARG USER_HOME_DIR="/root"
+ARG SHA=c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0
+ARG BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/
+
+RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
+  && curl -fsSL -o /tmp/apache-maven.tar.gz ${BASE_URL}/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+  && echo "${SHA}  /tmp/apache-maven.tar.gz" | sha512sum -c - \
+  && tar -xzf /tmp/apache-maven.tar.gz -C /usr/share/maven --strip-components=1 \
+  && rm -f /tmp/apache-maven.tar.gz \
+  && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
+
+ENV MAVEN_HOME /usr/share/maven
+ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+
+#FROM ajymau/ubi-maven:0.3.1 AS builder
+FROM maven AS builder
+
+RUN  mkdir -p /opt/ol \
+  && mkdir -p /stacks/java-openliberty/starterapp
+
+RUN chmod -R 777 /stacks/java-openliberty/starterapp
 
 COPY ./LICENSE /licenses/
-COPY --chown=java_user:java_group ./project/pom.xml /stacks/java-openliberty/stackfiles
-COPY --chown=java_user:java_group ./project/util /stacks/java-openliberty/stackfiles/util/
+ADD ./starterapp/src /stacks/java-openliberty/starterapp/src
+COPY ./starterapp/pom.xml /stacks/java-openliberty/starterapp/
 
-RUN  /stacks/java-openliberty/stackfiles/util/check_version build
+WORKDIR /stacks/java-openliberty/starterapp
+RUN mvn -DserverName=tmp liberty:create liberty:install-feature dependency:go-offline
+RUN rm -rf ./target/liberty/wlp/usr/servers/tmp
 
-WORKDIR /stacks/java-openliberty/stackfiles
-USER java_user
-RUN mvn -B -Dmaven.repo.local=/mvn/repository -N io.takari:maven:wrapper -Dmaven=$(mvn help:evaluate -Dexpression=maven.version -q -DforceStdout)
-RUN mvn -B -Pstack-image-package -Dmaven.repo.local=/mvn/repository liberty:install-server install dependency:go-offline
+#FROM ajymau/ubi-maven:0.3.1
+FROM maven
+RUN mkdir /mvn
+RUN mkdir -p /opt/ol
+COPY --from=builder /root/.m2 /mvn
+COPY --from=builder /stacks/java-openliberty/starterapp/target/liberty /opt/ol
+RUN chmod -R 777 /mvn
 RUN chmod -R 777 /opt/ol
-RUN chmod -R 777 /mvn/repository
