@@ -49,7 +49,7 @@ metadata:
     app.kubernetes.io/name: COMPONENT_NAME
     app.kubernetes.io/part-of: COMPONENT_NAME
   annotations:
-    openshift.io/host.generated: 'true'
+    openshift.io/host.generated: "true"
 spec:
   to:
     kind: Service
