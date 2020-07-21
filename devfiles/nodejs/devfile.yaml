@@ -11,7 +11,7 @@ projects:
 components:
   - container:
       name: runtime
-      image: registry.access.redhat.com/ubi8/nodejs-12:1-36
+      image: registry.access.redhat.com/ubi8/nodejs-12:1-45
       memoryLimit: 1024Mi
       mountSources: true
       endpoints:

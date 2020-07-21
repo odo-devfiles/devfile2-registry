@@ -1,5 +1,5 @@
 # Install the app dependencies in a full Node docker image
-FROM registry.access.redhat.com/ubi8/nodejs-12:1-36
+FROM registry.access.redhat.com/ubi8/nodejs-12:1-45
 
 COPY . /project/
 
