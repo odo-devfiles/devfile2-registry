@@ -14,13 +14,10 @@ jobs:
     - stage: test
       name: "Registry e2e tests"
       script:
-        - ./scripts/odoclone.sh
-        - cd $GOPATH/src/github.com/openshift/odo
-        - make goget-tools
-        - make bin
-        - sudo cp odo /usr/bin/odo
+        - ./scripts/get-odo-binary.sh
         - ./scripts/oc-cluster.sh
         - oc login -u developer
+        - ./devfiles/nodejs/test.sh
         - odo logout
 
     # TODO
