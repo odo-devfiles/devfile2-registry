@@ -56,10 +56,20 @@ commands:
   - exec:
       id: devRun
       component: devruntime 
-      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.6 -DhotTests=true liberty:dev
+      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.6 liberty:dev
       workingDir: /projects
       attributes:
         restart: "false"
       group:
         kind: run
         isDefault: true
+  - exec:
+      id: devRun-hot-tests
+      component: devruntime 
+      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.6 -DhotTests=true liberty:dev
+      workingDir: /projects
+      attributes:
+        restart: "false"
+      group:
+        kind: run
+        isDefault: false
