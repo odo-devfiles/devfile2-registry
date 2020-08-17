@@ -17,7 +17,7 @@ jobs:
         - ./scripts/get-odo-binary.sh
         - ./scripts/oc-cluster.sh
         - oc login -u developer
-        - ./devfiles/nodejs/test.sh
+        - ./scripts/e2e-tests.sh
         - odo logout
 
     # TODO
