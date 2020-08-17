@@ -1,27 +1,18 @@
 dist: xenial
 sudo: required
 
-language: go
-go: "1.12.x"
+language: minimal
 
 jobs:
   include:
-    - stage: setup
-      script:
-        - export PATH="$PATH:$GOPATH/bin"
-
-    # Run a few odo integration tests
     - stage: test
-      name: "Registry e2e tests"
+      name: "test all Devfiles"
       script:
-        - ./scripts/odoclone.sh
-        - cd $GOPATH/src/github.com/openshift/odo
-        - make goget-tools
-        - make bin
-        - sudo cp odo /usr/bin/odo
         - ./scripts/oc-cluster.sh
-        - oc login -u developer
+        - wget https://mirror.openshift.com/pub/openshift-v4/clients/odo/latest/odo-linux-amd64
+        - chmod +x odo-linux-amd64
+        - sudo mv odo-linux-amd64 /usr/local/bin/odo
+        - which odo
+        - odo login -u developer
+        - ./scripts/test.sh
         - odo logout
-
-    # TODO
-    # Run registry integration tests
