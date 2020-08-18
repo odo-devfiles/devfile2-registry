@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # fail if some commands fails
-set -e
+#set -e
 # show commands
 set -x
 
@@ -15,9 +15,22 @@ for dir in */; do
         echo "$dir"
         COMP_NAME=`echo $dir | sed 's:/*$::'`
         PROJECT_NAME=`LC_CTYPE=C tr -dc a-z < /dev/urandom | head -c 10 | xargs`
+        URL=`LC_CTYPE=C tr -dc a-z < /dev/urandom | head -c 5 | xargs`
+        echo "$URL"
+        HOST=`LC_CTYPE=C tr -dc a-z < /dev/urandom | head -c 5 | xargs`
+        echo "$HOST"
+        PORT=`cat $COMP_NAME/devfile.yaml | grep targetPort | awk '{split($0,a,":"); print a[2]}' | sed -e 's/^[[:space:]]*//'`
+        echo "$PORT"
         odo project create $PROJECT_NAME -w
-        odo create $COMP_NAME --devfile $COMP_NAME/devfile.yaml --context $TMP_DIR
+        odo create $COMP_NAME --devfile $COMP_NAME/devfile.yaml --project $PROJECT_NAME --context $TMP_DIR
+        # https://github.com/openshift/odo/issues/3767
+        # odo url create $URL --port $PORT --host $HOST.com --context $TMP_DIR --ingress
+        PWD=`pwd`
+        cd $TMP_DIR
+        odo url create $URL --port $PORT --host $HOST.com --ingress
+        cd $PWD
         odo push --context $TMP_DIR
+        odo project delete $PROJECT_NAME -f
         rm -rf $TMP_DIR
     fi
 done
