@@ -32,9 +32,15 @@ for dir in `ls -d */`; do
     if [[ $? -ne 0 ]]; then
         echo "May be add sample projects"
     fi
+    odo push --debug
+    if [[ $? -ne 0 ]]; then
+        echo "debug command not found in $dir devfile"
+    fi
     odo project delete $PROJECT_NAME -f
     rm -rf $TMP_DIR
     echo "--------End of validation of devfile in $dir--------"
 done
 
 popd
+
+
