@@ -50,3 +50,11 @@ commands:
       group:
         kind: run
         isDefault: true
+  - exec:
+      id: devDebug
+      component: runtime
+      commandLine: "/artifacts/bin/start-debug.sh"
+      workingDir: /
+      group:
+        kind: debug
+        isDefault: true
