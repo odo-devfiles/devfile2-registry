@@ -63,3 +63,13 @@ commands:
       group:
         kind: run
         isDefault: true
+  - exec:
+      id: devDebug
+      component: devruntime 
+      commandLine: mvn -Dmaven.repo.local=/mvn/repository -Dliberty.runtime.version=20.0.0.6 -DhotTests=true -DdebugPort=${DEBUG_PORT} liberty:dev
+      workingDir: /projects
+      attributes:
+        restart: "false"
+      group:
+        kind: debug
+        isDefault: true
