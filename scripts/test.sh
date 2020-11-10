@@ -12,7 +12,7 @@ executedTests=0
 getURL() {
     urlName=$1
     # get 3rd column from last line
-    url=$(odo url list | tail -1 | awk '{ print $3 }')
+    url=$(odo url list | grep ${urlName} | tail -1 | awk '{ print $3 }')
     echo "$url"
 }
 
@@ -87,7 +87,6 @@ waitForDebugCheck() {
 test() {
     devfileName=$1
     exampleRepo=$2
-    exampleDir=$3
     urlPort=$4
     urlPath=$5
     checkString=$6
@@ -99,7 +98,6 @@ test() {
     cd "$tmpDir" || return 1
 
     git clone --depth 1 "$exampleRepo" .
-    cd "${tmpDir}/${exampleDir}" || return 1
 
     odo project create "$devfileName" || error=true
     odo create "$devfileName" --devfile "$DEVFILES_DIR/$devfileName/devfile.yaml" || error=true
@@ -147,13 +145,20 @@ odo preference set -f experimental true
 
 
 # run test scenarios
-test "java-maven" "https://github.com/odo-devfiles/springboot-ex.git" "/" "8080" "/" "You are currently running a Spring server built for the IBM Cloud"
-test "java-openliberty" "https://github.com/OpenLiberty/application-stack-intro.git" "/" "9080" "/api/resource" "Hello! Welcome to Open Liberty"
-test "java-quarkus" "https://github.com/odo-devfiles/quarkus-ex" "/" "8080" "/" "Congratulations, you have created a new Quarkus application."
-test "java-springboot" "https://github.com/odo-devfiles/springboot-ex.git" "/" "8080" "/" "You are currently running a Spring server built for the IBM Cloud"
-test "nodejs" "https://github.com/odo-devfiles/nodejs-ex.git" "/" "3000" "/" "Hello from Node.js Starter Application!"
-test "python" "https://github.com/odo-devfiles/python-ex.git" "/" "8000" "/" "Hello World!"
-test "python-django" "https://github.com/odo-devfiles/python-django-ex.git" "/" "8000" "/" "The install worked successfully! Congratulations!"
+# parameters:
+#  - name of a devfile (directory in devfile registry)
+#  - git url of an example application
+#  - port number for which url will be created
+#  - url path to check for response (usually "/")
+#  - string that url response must contain to checking that application is running corect 
+test "java-maven" "https://github.com/odo-devfiles/springboot-ex.git" "8080" "/" "You are currently running a Spring server built for the IBM Cloud"
+test "java-openliberty" "https://github.com/OpenLiberty/application-stack-intro.git" "9080" "/api/resource" "Hello! Welcome to Open Liberty"
+test "java-quarkus" "https://github.com/odo-devfiles/quarkus-ex" "8080" "/" "Congratulations, you have created a new Quarkus application."
+test "java-springboot" "https://github.com/odo-devfiles/springboot-ex.git" "8080" "/" "You are currently running a Spring server built for the IBM Cloud"
+test "nodejs" "https://github.com/odo-devfiles/nodejs-ex.git" "3000" "/" "Hello from Node.js Starter Application!"
+test "python" "https://github.com/odo-devfiles/python-ex.git" "8000" "/" "Hello World!"
+test "python-django" "https://github.com/odo-devfiles/python-django-ex.git" "8000" "/" "The install worked successfully! Congratulations!"
+test "java-vertx" "https://github.com/jponge/vertx-ex" "8080" "/" "Hello from Vert.x"
 
 
 # remember if there was an error so the script can exist with proper exit code at the end
