@@ -87,9 +87,9 @@ waitForDebugCheck() {
 test() {
     devfileName=$1
     exampleRepo=$2
-    urlPort=$4
-    urlPath=$5
-    checkString=$6
+    urlPort=$3
+    urlPath=$4
+    checkString=$5
 
     # remember if there was en error
     error=false
@@ -138,7 +138,7 @@ test() {
 
     return 0
 }
-
+ 
 
 # run odo in experimental mode
 odo preference set -f experimental true
