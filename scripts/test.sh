@@ -140,10 +140,6 @@ test() {
 }
  
 
-# run odo in experimental mode
-odo preference set -f experimental true
-
-
 # run test scenarios
 # parameters:
 #  - name of a devfile (directory in devfile registry)
@@ -156,7 +152,7 @@ test "java-openliberty" "https://github.com/OpenLiberty/application-stack-starte
 test "java-quarkus" "https://github.com/odo-devfiles/quarkus-ex" "8080" "/" "Congratulations, you have created a new Quarkus application."
 test "java-springboot" "https://github.com/odo-devfiles/springboot-ex.git" "8080" "/" "You are currently running a Spring server built for the IBM Cloud"
 test "nodejs" "https://github.com/odo-devfiles/nodejs-ex.git" "3000" "/" "Hello from Node.js Starter Application!"
-test "python" "https://github.com/odo-devfiles/python-ex.git" "8000" "/" "Hello World!"
+test "python" "https://github.com/odo-devfiles/python-ex.git" "8080" "/" "Hello World!"
 test "python-django" "https://github.com/odo-devfiles/python-django-ex.git" "8000" "/" "The install worked successfully! Congratulations!"
 test "java-vertx" "https://github.com/jponge/vertx-ex" "8080" "/" "Hello from Vert.x"
 
