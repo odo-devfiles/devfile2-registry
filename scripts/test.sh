@@ -99,6 +99,10 @@ test() {
 
     git clone --depth 1 "$exampleRepo" .
 
+    # examples used in tests might contain Devfile.yaml
+    # in this case it would break the test
+    rm -rf devfile.yaml devfile.yml
+
     odo project create "$devfileName" || error=true
     odo create "$devfileName" --devfile "$DEVFILES_DIR/$devfileName/devfile.yaml" || error=true
     odo url create myurl --port "$urlPort" || error=true
