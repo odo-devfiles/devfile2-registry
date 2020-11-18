@@ -151,10 +151,10 @@ test() {
 #  - port number for which url will be created
 #  - url path to check for response (usually "/")
 #  - string that url response must contain to checking that application is running corect 
-test "java-maven" "https://github.com/odo-devfiles/springboot-ex.git" "8080" "/" "You are currently running a Spring server built for the IBM Cloud"
+test "java-maven" "https://github.com/odo-devfiles/springboot-ex.git" "8080" "/" "Hello World!"
 test "java-openliberty" "https://github.com/OpenLiberty/application-stack-intro.git" "9080" "/api/resource" "Hello! Welcome to Open Liberty"
 test "java-quarkus" "https://github.com/odo-devfiles/quarkus-ex" "8080" "/" "Congratulations, you have created a new Quarkus application."
-test "java-springboot" "https://github.com/odo-devfiles/springboot-ex.git" "8080" "/" "You are currently running a Spring server built for the IBM Cloud"
+test "java-springboot" "https://github.com/odo-devfiles/springboot-ex.git" "8080" "/" "Hello World!"
 test "nodejs" "https://github.com/odo-devfiles/nodejs-ex.git" "3000" "/" "Hello from Node.js Starter Application!"
 test "python" "https://github.com/odo-devfiles/python-ex.git" "8080" "/" "Hello World!"
 test "python-django" "https://github.com/odo-devfiles/python-django-ex.git" "8000" "/" "The install worked successfully! Congratulations!"
