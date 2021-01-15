@@ -1,0 +1,221 @@
+schemaVersion: 2.0.0
+metadata:
+  name: java-jboss-eap-xp
+  version: 1.0.0
+  website: https://access.redhat.com/products/red-hat-jboss-enterprise-application-platform/
+starterProjects:
+  - name: microprofile-config
+    description: EAP XP 2.0 Eclipse Microprofile Config Quickstart
+    git:
+      checkoutFrom:
+        remote: jboss-developer
+        revision: xp-2.0.x
+      remotes:
+        jboss-developer: https://github.com/jboss-developer/jboss-eap-quickstarts.git
+    subDir: microprofile-config
+  - name: microprofile-config
+    description: EAP XP 2.0 Eclipse Microprofile Fault Tolerance Quickstart
+    git:
+      checkoutFrom:
+        remote: jboss-developer
+        revision: xp-2.0.x
+      remotes:
+        jboss-developer: https://github.com/jboss-developer/jboss-eap-quickstarts.git
+    subDir: microprofile-fault-tolerance
+  - name: microprofile-config
+    description: EAP XP 2.0 Eclipse Microprofile Health Quickstart
+    git:
+      checkoutFrom:
+        remote: jboss-developer
+        revision: xp-2.0.x
+      remotes:
+        jboss-developer: https://github.com/jboss-developer/jboss-eap-quickstarts.git
+    subDir: microprofile-health
+  - name: microprofile-config
+    description: EAP XP 2.0 Eclipse Microprofile JWT Quickstart
+    git:
+      checkoutFrom:
+        remote: jboss-developer
+        revision: xp-2.0.x
+      remotes:
+        jboss-developer: https://github.com/jboss-developer/jboss-eap-quickstarts.git
+    subDir: microprofile-jwt
+  - name: microprofile-config
+    description: EAP XP 2.0 Eclipse Microprofile Metrics Quickstart
+    git:
+      checkoutFrom:
+        remote: jboss-developer
+        revision: xp-2.0.x
+      remotes:
+        jboss-developer: https://github.com/jboss-developer/jboss-eap-quickstarts.git
+    subDir: microprofile-metrics
+  - name: microprofile-config
+    description: EAP XP 2.0 Eclipse Microprofile OpenAPI Quickstart
+    git:
+      checkoutFrom:
+        remote: jboss-developer
+        revision: xp-2.0.x
+      remotes:
+        jboss-developer: https://github.com/jboss-developer/jboss-eap-quickstarts.git
+    subDir: microprofile-openapi
+  - name: microprofile-config
+    description: EAP XP 2.0 Eclipse Microprofile OpenTracing Quickstart
+    git:
+      checkoutFrom:
+        remote: jboss-developer
+        revision: xp-2.0.x
+      remotes:
+        jboss-developer: https://github.com/jboss-developer/jboss-eap-quickstarts.git
+    subDir: microprofile-opentracing
+  - name: microprofile-config
+    description: EAP XP 2.0 Eclipse Microprofile REST Client Quickstart
+    git:
+      checkoutFrom:
+        remote: jboss-developer
+        revision: xp-2.0.x
+      remotes:
+        jboss-developer: https://github.com/jboss-developer/jboss-eap-quickstarts.git
+    subDir: microprofile-rest-client
+components:
+  - name: eap-xp
+    container:
+      image: registry.redhat.io/jboss-eap-7/eap-xp2-openjdk11-openshift-rhel8
+      memoryLimit: 1512Mi
+      mountSources: true
+      volumeMounts:
+        - name: m2-repository
+          path: /home/jboss/.m2/repository
+      env:
+        - name: GC_METASPACE_SIZE
+          value: '96'
+        - name: GC_MAX_METASPACE_SIZE
+          value: '256'
+        - name: GALLEON_PROVISION_LAYERS
+          value: 'jaxrs-server,microprofile-platform'
+        - name: S2I_DESTINATION_DIR
+          value: '/projects'
+        - name: STANDALONE_RESTORE
+          value: /home/jboss/.m2/.lucky
+#Overriding s2i image config to use the copied contents and thus avoid the file permissions issue.
+        - name: GALLEON_LOCAL_MAVEN_REPO
+          value: '/tmp/galleon-m2-repository'
+        - name: JBOSS_HOME
+          value: '/projects/eap'
+      endpoints:
+        - name: 'http'
+          targetPort: 8080
+  - name: m2-repository
+    volume:
+      size: 3Gi
+  - name: jaeger
+    container:
+      image: quay.io/jaegertracing/all-in-one:1.21.0
+      memoryLimit: 128Mi
+      endpoints:
+        - name: 'tracing-ui'
+          targetPort: 16686
+commands:
+  - id: build
+    composite:
+      label: Build and deploy on JBoss EAP-XP Server.
+      commands:
+        - compile
+        - copy-artifact
+      parallel: false
+      group:
+        kind: build
+        isDefault: true
+  - id: compile
+    exec:
+      label: Compile and package the application
+      component: eap-xp
+      commandLine: mvn -Dmaven.test.skip=true -Dcom.redhat.xpaas.repo.jbossorg -s /home/jboss/.m2/settings.xml clean package
+      workingDir: $PROJECTS_ROOT
+      group:
+        kind: build
+        isDefault: false
+  - id: copy-artifact
+    exec:
+      label: Copy application artifact
+      component: eap-xp
+      commandLine: cp target/*.war $JBOSS_HOME/standalone/deployments/ROOT.war
+      workingDir: $PROJECTS_ROOT
+      group:
+        kind: build
+        isDefault: false
+  - id: run
+    exec:
+      label: Launch JBoss EAP-XP Server
+      component: eap-xp
+      commandLine: cp -f $STANDALONE_RESTORE/standalone-openshift.xml $JBOSS_HOME/standalone/configuration/standalone-openshift.xml && $JBOSS_HOME/bin/openshift-launch.sh
+      workingDir: $PROJECTS_ROOT
+      hotReloadCapable: true
+      group:
+        kind: run
+        isDefault: true
+  - id: debug
+    exec:
+      label: Launch JBoss EAP-XP Server with debug enabled
+      component: eap-xp
+      commandLine: cp -f $STANDALONE_RESTORE/standalone-openshift.xml $JBOSS_HOME/standalone/configuration/standalone-openshift.xml && $JBOSS_HOME/bin/openshift-launch.sh
+      workingDir: $PROJECTS_ROOT
+      hotReloadCapable: true
+      env:
+        - name: JAVA_OPTS_APPEND
+          value: '-Xrunjdwp:transport=dt_socket,address=0.0.0.0:$DEBUG_PORT,server=y,suspend=n -Dsun.util.logging.disableCallerCheck=true'
+      group:
+        kind: debug
+        isDefault: true
+  - id: provision-server
+    exec:
+      component: eap-xp
+      commandLine: /usr/local/s2i/assemble && cp -Rf $JBOSS_HOME .
+      workingDir: $PROJECTS_ROOT
+      env:
+        - name: JBOSS_HOME
+          value: '/tmp/eap'
+      group:
+        kind: build
+        isDefault: false
+  - id: store-config
+    exec:
+      component: eap-xp
+      commandLine: mkdir $STANDALONE_RESTORE && cp -f $JBOSS_HOME/standalone/configuration/standalone-openshift.xml $STANDALONE_RESTORE/standalone-openshift.xml
+      workingDir: $PROJECTS_ROOT
+      env:
+        - name: JBOSS_HOME
+          value: /tmp/eap
+      group:
+        kind: build
+        isDefault: false
+#Hack to avoid the file permissions issue with the random openshift user
+  - id: copy-galleon
+    exec:
+      component: eap-xp
+      commandLine: cp -Rf /opt/jboss/container/wildfly/s2i/galleon/galleon-m2-repository /tmp/. && cp -Rf /opt/eap /tmp/.
+      workingDir: $PROJECTS_ROOT
+      group:
+        kind: build
+        isDefault: false
+  - id: init-server
+    composite:
+      label: Provision JBoss EAP-XP Server on post-start.
+      commands:
+        - copy-galleon
+        - provision-server
+        - store-config
+      parallel: false
+      group:
+        kind: build
+        isDefault: false
+  - id: cleanup
+    exec:
+      component: eap-xp
+      commandLine: rm -Rf eap
+      workingDir: $PROJECTS_ROOT
+      group:
+        kind: build
+        isDefault: false
+events:
+  postStart:
+    - "init-server"

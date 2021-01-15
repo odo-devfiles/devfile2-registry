@@ -1,5 +1,43 @@
 [
   {
+    "name": "java-jboss-eap-xp",
+    "displayName": "JBoss EAP XP 2.0",
+    "description": "Java stack with EAP XP 2.0, OpenJDK 11 and Maven 3.5",
+    "tags": [
+      "RHEL8",
+      "Java",
+      "OpenJDK",
+      "Maven",
+      "EAP",
+      "Microprofile",
+      "EAP XP"
+    ],
+    "projectType": "JBoss EAP XP",
+    "language": "java",
+    "links": {
+      "self": "/devfiles/java-jboss-eap-xp/devfile.yaml"
+    }
+  },
+  {
+    "name": "java-jboss-eap-xp-bootable-jar",
+    "displayName": "JBoss EAP XP 2.0 Bootable Jar",
+    "description": "Java stack with EAP XP 2.0 in bootable Jar mode, OpenJDK 11 and Maven 3.5",
+    "tags": [
+      "RHEL8",
+      "Java",
+      "OpenJDK",
+      "Maven",
+      "EAP",
+      "Microprofile",
+      "EAP XP Bootable"
+    ],
+    "projectType": "JBoss EAP XP",
+    "language": "java",
+    "links": {
+      "self": "/devfiles/java-jboss-eap-xp-bootable-jar/devfile.yaml"
+    }
+  },
+  {
     "name": "java-maven",
     "displayName": "Maven Java",
     "description": "Upstream Maven and OpenJDK 11",

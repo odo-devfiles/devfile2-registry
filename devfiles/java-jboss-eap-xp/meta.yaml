@@ -1,0 +1,6 @@
+name: java-jboss-eap-xp
+displayName: JBoss EAP XP 2.0
+description: Java stack with EAP XP 2.0, OpenJDK 11 and Maven 3.5
+tags: ["RHEL8", "Java", "OpenJDK", "Maven", "EAP", "Microprofile", "EAP XP"]
+projectType: "JBoss EAP XP"
+language: "java"
