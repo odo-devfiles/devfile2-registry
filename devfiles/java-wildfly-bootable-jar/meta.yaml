@@ -1,0 +1,6 @@
+name: java-wildfly-bootable-jar
+displayName: WildFly Bootable Jar
+description: Java stack with WildFly in bootable Jar mode, OpenJDK 11 and Maven 3.5
+tags:  ["RHEL8", "Java", "OpenJDK", "Maven", "WildFly", "Microprofile", "WildFly Bootable"]
+projectType: "WildFly"
+language: "java"

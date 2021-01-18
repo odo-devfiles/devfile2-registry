@@ -1,0 +1,6 @@
+name: java-wildfly
+displayName: WildFly Java
+description: Upstream WildFly
+tags: ["Java", "WildFly"]
+projectType: "wildfly"
+language: "java"
