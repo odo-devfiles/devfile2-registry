@@ -85,7 +85,7 @@ test() {
     tmpDir=$(mktemp -d)
     cd "$tmpDir" || return 1
 
-    # odo project create "$devfileName" || error=true
+    odo project create "$devfileName" || error=true
     if $error; then
         echo "ERROR project create failed"
         FAILED_TESTS="$FAILED_TESTS $devfileName"
@@ -162,9 +162,6 @@ test() {
 for devfile_dir in $(find $DEVFILES_DIR -maxdepth 1 -type d ! -path $DEVFILES_DIR); do
     devfile_name="$(basename $devfile_dir)"
     devfile_path=$devfile_dir/devfile.yaml
-    if [ "$devfile_name" != "java-openliberty" ]; then
-        continue
-    fi
     test "$devfile_name" "$devfile_path"
 done
 
