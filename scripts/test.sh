@@ -159,7 +159,7 @@ test() {
     return 0
 }
  
-for devfile_dir in $(find $DEVFILES_DIR ! -path $DEVFILES_DIR -type d -depth 1); do
+for devfile_dir in $(find $DEVFILES_DIR -depth 1 -type d ! -path $DEVFILES_DIR); do
     devfile_name="$(basename $devfile_dir)"
     devfile_path=$devfile_dir/devfile.yaml
     if [ "$devfile_name" != "java-openliberty" ]; then
