@@ -18,7 +18,7 @@ waitForHTTPStatus() {
 
     for i in $(seq 1 10); do
         echo "try: $i"
-        content=$(curl -I "$url")
+        content=$(curl -i "$url")
         echo "Checking if $url is returning HTTP $statusCode"
         echo "$content" | grep -q -E "HTTP/[0-9.]+ $statusCode"
         retVal=$?
