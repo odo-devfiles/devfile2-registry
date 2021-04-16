@@ -1,7 +1,7 @@
 schemaVersion: 2.0.0
 metadata:
   name: java-wildfly-bootable-jar
-  version: 1.0.0
+  version: 1.0.1
   website: https://docs.wildfly.org/bootablejar/
 starterProjects:
   - name: microprofile-config
@@ -9,7 +9,7 @@ starterProjects:
     git:
       checkoutFrom:
         remote: wildfly-quickstart
-        revision: 22.0.0.Final
+        revision: 22.0.1.Final
       remotes:
         wildfly-quickstart: https://github.com/wildfly/quickstart.git
     subDir: microprofile-config
@@ -18,7 +18,7 @@ starterProjects:
     git:
       checkoutFrom:
         remote: wildfly-quickstart
-        revision: 22.0.0.Final
+        revision: 22.0.1.Final
       remotes:
         wildfly-quickstart: https://github.com/wildfly/quickstart.git
     subDir: microprofile-fault-tolerance
@@ -27,7 +27,7 @@ starterProjects:
     git:
       checkoutFrom:
         remote: wildfly-quickstart
-        revision: 22.0.0.Final
+        revision: 22.0.1.Final
       remotes:
         wildfly-quickstart: https://github.com/wildfly/quickstart.git
     subDir: microprofile-health
@@ -36,7 +36,7 @@ starterProjects:
     git:
       checkoutFrom:
         remote: wildfly-quickstart
-        revision: 22.0.0.Final
+        revision: 22.0.1.Final
       remotes:
         wildfly-quickstart: https://github.com/wildfly/quickstart.git
     subDir: microprofile-jwt
@@ -45,7 +45,7 @@ starterProjects:
     git:
       checkoutFrom:
         remote: wildfly-quickstart
-        revision: 22.0.0.Final
+        revision: 22.0.1.Final
       remotes:
         wildfly-quickstart: https://github.com/wildfly/quickstart.git
     subDir: microprofile-metrics
@@ -54,7 +54,7 @@ starterProjects:
     git:
       checkoutFrom:
         remote: wildfly-quickstart
-        revision: 22.0.0.Final
+        revision: 22.0.1.Final
       remotes:
         wildfly-quickstart: https://github.com/wildfly/quickstart.git
     subDir: microprofile-openapi
@@ -63,7 +63,7 @@ starterProjects:
     git:
       checkoutFrom:
         remote: wildfly-quickstart
-        revision: 22.0.0.Final
+        revision: 22.0.1.Final
       remotes:
         wildfly-quickstart: https://github.com/wildfly/quickstart.git
     subDir: microprofile-opentracing
@@ -72,7 +72,7 @@ starterProjects:
     git:
       checkoutFrom:
         remote: wildfly-quickstart
-        revision: 22.0.0.Final
+        revision: 22.0.1.Final
       remotes:
         wildfly-quickstart: https://github.com/wildfly/quickstart.git
     subDir: microprofile-rest-client
@@ -113,7 +113,7 @@ components:
         - name: JAVA_OPTS
           value: '-Djava.security.egd=file:/dev/urandom'
         - name: MVN_ARGS_APPEND
-          value: '-Pbootable-jar -s /home/jboss/.m2/settings.xml -Dmaven.repo.local=/home/jboss/.m2/repository -Dcom.redhat.xpaas.repo.jbossorg -Dversion.wildfly-jar.maven.plugin=3.0.1.Final'
+          value: '-Pbootable-jar-openshift -Djkube.skip=true -s /home/jboss/.m2/settings.xml -Dmaven.repo.local=/home/jboss/.m2/repository -Dcom.redhat.xpaas.repo.jbossorg -Dversion.wildfly-jar.maven.plugin=3.0.2.Final'
       endpoints:
         - name: 'http'
           targetPort: 8080
@@ -140,7 +140,7 @@ commands:
   - id: debug
     exec:
       component: wildfly
-      commandLine: mvn ${MVN_ARGS_APPEND} -Dwildfly.bootable.arguments="-b=0.0.0.0" -Dwildfly.bootable.jvmArguments="-agentlib:jdwp=transport=dt_socket,address=0.0.0.0:${DEBUG_PORT},server=y,suspend=n" org.wildfly.plugins:wildfly-jar-maven-plugin:run
+      commandLine: mvn ${MVN_ARGS_APPEND} -Dwildfly.bootable.jvmArguments="-agentlib:jdwp=transport=dt_socket,address=0.0.0.0:${DEBUG_PORT},server=y,suspend=n" org.wildfly.plugins:wildfly-jar-maven-plugin:run
       workingDir: $PROJECTS_ROOT
       group:
         kind: debug
@@ -156,7 +156,7 @@ commands:
   - id: dev-run
     exec:
       component: wildfly
-      commandLine: mvn ${MVN_ARGS_APPEND} -Dwildfly.bootable.arguments="-b=0.0.0.0" org.wildfly.plugins:wildfly-jar-maven-plugin:dev
+      commandLine: mvn ${MVN_ARGS_APPEND} org.wildfly.plugins:wildfly-jar-maven-plugin:dev
       workingDir: $PROJECTS_ROOT
       hotReloadCapable: true
       group:
@@ -165,7 +165,7 @@ commands:
   - id: dev-debug
     exec:
       component: wildfly
-      commandLine: mvn ${MVN_ARGS_APPEND} -Dwildfly.bootable.arguments="-b=0.0.0.0" -Dwildfly.bootable.jvmArguments="-agentlib:jdwp=transport=dt_socket,address=0.0.0.0:${DEBUG_PORT},server=y,suspend=n" org.wildfly.plugins:wildfly-jar-maven-plugin:dev
+      commandLine: mvn ${MVN_ARGS_APPEND} -Dwildfly.bootable.jvmArguments="-agentlib:jdwp=transport=dt_socket,address=0.0.0.0:${DEBUG_PORT},server=y,suspend=n" org.wildfly.plugins:wildfly-jar-maven-plugin:dev
       workingDir: $PROJECTS_ROOT
       hotReloadCapable: true
       group:
@@ -174,7 +174,7 @@ commands:
   - id: watch-build
     exec:
       component: wildfly
-      commandLine: echo 'It's watcher mode Baby !!!''
+      commandLine: echo 'It's watcher mode so we are doing nothing to build.''
       workingDir: $PROJECTS_ROOT
       group:
         kind: build
@@ -182,7 +182,7 @@ commands:
   - id: watch-run
     exec:
       component: wildfly
-      commandLine: mvn ${MVN_ARGS_APPEND} -Dwildfly.bootable.arguments="-b=0.0.0.0" org.wildfly.plugins:wildfly-jar-maven-plugin:dev-watch -e -DskipTests
+      commandLine: mvn ${MVN_ARGS_APPEND} org.wildfly.plugins:wildfly-jar-maven-plugin:dev-watch -e -DskipTests
       workingDir: $PROJECTS_ROOT
       hotReloadCapable: true
       group:
@@ -191,7 +191,7 @@ commands:
   - id: watch-debug
     exec:
       component: wildfly
-      commandLine: mvn ${MVN_ARGS_APPEND} -Dwildfly.bootable.arguments="-b=0.0.0.0" -Dwildfly.bootable.jvmArguments="-agentlib:jdwp=transport=dt_socket,address=0.0.0.0:${DEBUG_PORT},server=y,suspend=n" org.wildfly.plugins:wildfly-jar-maven-plugin:dev-watch -e
+      commandLine: mvn ${MVN_ARGS_APPEND} -Dwildfly.bootable.jvmArguments="-agentlib:jdwp=transport=dt_socket,address=0.0.0.0:${DEBUG_PORT},server=y,suspend=n" org.wildfly.plugins:wildfly-jar-maven-plugin:dev-watch -e
       workingDir: $PROJECTS_ROOT
       hotReloadCapable: true
       group:
