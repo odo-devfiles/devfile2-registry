@@ -16,9 +16,6 @@ components:
       memoryLimit: 1024Mi
       mountSources: true
       sourceMapping: /project
-      endpoints:
-        - name: http-3000
-          targetPort: 3000
 commands:
   - id: install
     exec:
